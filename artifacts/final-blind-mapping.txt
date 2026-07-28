@@ -1,0 +1,8 @@
+T1 A=Opus 5 (high) B=Sol (high)
+T2 A=Sol (medium) B=Opus 5 (medium)
+T3 A=Sol (medium) B=Opus 5 (medium)
+T4 A=Sol (high) B=Opus 5 (high)
+T5 A=Opus 5 (high) B=Sol (high)
+T6 A=Sol (high) B=Opus 5 (high)
+T7 A=Opus 5 (high) B=Sol (high)
+T8 A=Sol (medium) B=Opus 5 (medium)

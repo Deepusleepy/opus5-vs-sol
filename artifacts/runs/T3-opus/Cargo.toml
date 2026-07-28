@@ -1,0 +1,8 @@
+[package]
+name = "recparse"
+version = "0.1.0"
+edition = "2021"
+description = "Zero-copy parser for a length-prefixed record wire format."
+license = "MIT OR Apache-2.0"
+
+[dependencies]

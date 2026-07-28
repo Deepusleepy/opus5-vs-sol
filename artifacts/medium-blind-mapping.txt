@@ -1,0 +1,8 @@
+T1 A=opus B=sol
+T2 A=sol B=opus
+T3 A=sol B=opus
+T4 A=opus B=sol
+T5 A=opus B=sol
+T6 A=opus B=sol
+T7 A=opus B=sol
+T8 A=opus B=sol

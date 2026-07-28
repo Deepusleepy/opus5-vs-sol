@@ -1,0 +1,112 @@
+import { type Clock, systemClock } from './clock.js';
+import { CircuitOpenError } from './errors.js';
+import type { CircuitState, EventSink } from './events.js';
+
+export interface CircuitBreakerOptions {
+  /** Consecutive failures in the closed state that trip the breaker. */
+  readonly failureThreshold: number;
+  /** How long the breaker stays open before allowing a probe. */
+  readonly cooldownMs: number;
+  readonly clock?: Clock;
+  readonly onEvent?: EventSink;
+}
+
+/**
+ * Circuit breaker around a single async operation.
+ *
+ * closed --failureThreshold consecutive failures--> open
+ * open --cooldownMs elapsed--> half-open (exactly one in-flight probe)
+ * half-open --probe ok--> closed | --probe fails--> open
+ */
+export class CircuitBreaker<T> {
+  #state: CircuitState = 'closed';
+  #consecutiveFailures = 0;
+  #openedAt = 0;
+  #probeInFlight = false;
+  readonly #clock: Clock;
+  readonly #emit: EventSink;
+
+  constructor(
+    private readonly fn: () => Promise<T>,
+    private readonly options: CircuitBreakerOptions,
+  ) {
+    this.#clock = options.clock ?? systemClock;
+    this.#emit = options.onEvent ?? ((): void => {});
+  }
+
+  /** Current state, after applying any due open -> half-open transition. */
+  get state(): CircuitState {
+    this.#maybeHalfOpen();
+    return this.#state;
+  }
+
+  async exec(): Promise<T> {
+    this.#maybeHalfOpen();
+
+    if (this.#state === 'open') {
+      this.#emit({ type: 'circuit-rejected', at: this.#clock.now(), state: 'open' });
+      throw new CircuitOpenError('open');
+    }
+
+    let isProbe = false;
+    if (this.#state === 'half-open') {
+      // The classic bug: letting every concurrent caller through while
+      // half-open. Only the first caller becomes the probe; the rest are
+      // rejected fast until the probe settles.
+      if (this.#probeInFlight) {
+        this.#emit({ type: 'circuit-rejected', at: this.#clock.now(), state: 'half-open' });
+        throw new CircuitOpenError('half-open');
+      }
+      this.#probeInFlight = true;
+      isProbe = true;
+      this.#emit({ type: 'circuit-probe', at: this.#clock.now() });
+    }
+
+    try {
+      const value = await this.fn();
+      this.#onSuccess(isProbe);
+      return value;
+    } catch (error) {
+      this.#onFailure(isProbe);
+      throw error;
+    }
+  }
+
+  #onSuccess(isProbe: boolean): void {
+    if (isProbe) this.#probeInFlight = false;
+    this.#consecutiveFailures = 0;
+    if (this.#state !== 'closed') this.#transition('closed');
+  }
+
+  #onFailure(isProbe: boolean): void {
+    if (isProbe) {
+      this.#probeInFlight = false;
+      this.#open();
+      return;
+    }
+    this.#consecutiveFailures++;
+    if (this.#state === 'closed' && this.#consecutiveFailures >= this.options.failureThreshold) {
+      this.#open();
+    }
+  }
+
+  #open(): void {
+    this.#openedAt = this.#clock.now();
+    this.#consecutiveFailures = 0;
+    this.#transition('open');
+  }
+
+  #maybeHalfOpen(): void {
+    if (this.#state === 'open' && this.#clock.now() - this.#openedAt >= this.options.cooldownMs) {
+      this.#probeInFlight = false;
+      this.#transition('half-open');
+    }
+  }
+
+  #transition(to: CircuitState): void {
+    const from = this.#state;
+    if (from === to) return;
+    this.#state = to;
+    this.#emit({ type: 'circuit-transition', at: this.#clock.now(), from, to });
+  }
+}

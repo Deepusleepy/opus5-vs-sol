@@ -1,0 +1,24 @@
+{
+  "name": "t7-opushi",
+  "version": "1.0.0",
+  "description": "Headless undoable store with React bindings (logic only, no components).",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "gauntlet": "npm run typecheck && npm run test"
+  },
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^26.1.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "jsdom": "^30.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  },
+  "private": true
+}

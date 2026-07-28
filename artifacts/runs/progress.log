@@ -1,0 +1,58 @@
+08:05:51 START T2-opus
+08:05:51 START T1-sol
+08:05:51 START T1-opus
+08:05:51 START T2-sol
+08:09:35 END   T1-sol rc=0 elapsed=224s
+08:09:35 START T3-sol
+08:10:19 END   T2-sol rc=0 elapsed=268s
+08:10:19 START T3-opus
+08:11:46 END   T1-opus rc=0 elapsed=355s
+08:11:46 START T4-sol
+08:13:56 END   T3-sol rc=0 elapsed=261s
+08:13:56 START T4-opus
+08:16:04 END   T2-opus rc=0 elapsed=613s
+08:16:04 START T5-sol
+08:17:24 END   T4-sol rc=0 elapsed=338s
+08:17:24 START T5-opus
+08:17:25 END   T3-opus rc=0 elapsed=426s
+08:17:25 START T6-sol
+08:21:21 END   T6-sol rc=0 elapsed=236s
+08:21:21 START T6-opus
+08:22:51 END   T4-opus rc=0 elapsed=535s
+08:22:51 START T7-sol
+08:27:01 END   T6-opus rc=0 elapsed=340s
+08:27:01 START T7-opus
+08:28:58 END   T7-sol rc=0 elapsed=367s
+08:28:58 START T8-sol
+08:30:07 END   T5-opus rc=0 elapsed=763s
+08:30:07 START T8-opus
+08:31:44 END   T5-sol rc=0 elapsed=940s
+08:31:44 START T9-sol
+08:33:21 END   T8-sol rc=0 elapsed=263s
+08:33:21 START T9-opus
+08:34:03 END   T8-opus rc=0 elapsed=236s
+08:34:28 END   T9-sol rc=0 elapsed=164s
+08:36:36 END   T9-opus rc=0 elapsed=195s
+08:41:32 END   T7-opus rc=0 elapsed=871s
+08:41:32 ALL RUNS FINISHED
+09:29:27 START T4-opushi
+09:29:27 START T4-solhi
+09:29:27 START T1-opushi
+09:29:27 START T1-solhi
+09:35:46 END   T1-solhi rc=0 elapsed=379s
+09:35:47 START T5-solhi
+09:36:45 END   T4-solhi rc=0 elapsed=438s
+09:36:45 START T5-opushi
+09:42:08 END   T5-solhi rc=0 elapsed=381s
+09:42:08 START T6-solhi
+09:45:08 END   T1-opushi rc=0 elapsed=941s
+09:45:08 START T6-opushi
+10:06:31 END   T6-opushi rc=0 elapsed=1283s
+10:06:31 START T7-solhi
+10:07:34 END   T6-solhi rc=0 elapsed=1526s
+10:07:34 START T7-opushi
+10:11:14 END   T5-opushi rc=0 elapsed=2069s
+10:14:11 END   T4-opushi rc=0 elapsed=2684s
+10:17:37 END   T7-solhi rc=0 elapsed=666s
+10:44:43 END   T7-opushi rc=0 elapsed=2229s
+10:44:43 HIGH-EFFORT ROUND FINISHED

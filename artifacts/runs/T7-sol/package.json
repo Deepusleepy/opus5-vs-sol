@@ -1,0 +1,21 @@
+{
+  "name": "undoable-react-store",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^26.1.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "jsdom": "^30.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  }
+}

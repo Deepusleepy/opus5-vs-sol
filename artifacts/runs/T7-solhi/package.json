@@ -1,0 +1,26 @@
+{
+  "name": "undoable-react-store",
+  "version": "1.0.0",
+  "description": "A headless undoable external store with React hooks",
+  "type": "module",
+  "exports": "./src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^24.1.0",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
+    "jsdom": "^26.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.6"
+  }
+}

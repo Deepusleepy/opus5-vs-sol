@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b0c0f">
+<meta name="description" content="Nine tasks, 28 outputs, and blind cross-review: where Opus 5 and Sol were actually better, and what winning a task meant.">
+<meta property="og:title" content="Opus 5 vs Sol: what the 5–3 result means">
+<meta property="og:description" content="Opus covered more edge cases and proved more. Sol was faster, smaller, and often easier to scan.">
+<meta property="og:type" content="article">
+<meta property="og:image" content="assets/opus-vs-sol-results-v10.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Opus 5 vs Sol: what the 5–3 result means">
+<meta name="twitter:description" content="Opus covered more edge cases and proved more. Sol was faster, smaller, and often easier to scan.">
+<meta name="twitter:image" content="assets/opus-vs-sol-results-v10.png">
+<title>Opus 5 vs Sol</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --page: #090a0c;
+    --surface: #111318;
+    --surface-2: #171a20;
+    --ink: #f5f6f7;
+    --soft: #c8ccd2;
+    --muted: #8a919c;
+    --faint: #555d68;
+    --rule: #282d35;
+    --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration-color: var(--faint); text-underline-offset: 3px; }
+  a:hover { text-decoration-color: var(--ink); }
+  .shell { width: min(calc(100% - 3rem), 68rem); margin-inline: auto; }
+  .nav { display: flex; justify-content: space-between; align-items: center; gap: 2rem; padding: 1.15rem 0; border-bottom: 1px solid var(--rule); color: var(--soft); font-size: .82rem; }
+  .nav > span:first-child { font-weight: 750; }
+  .nav-links { display: flex; flex-wrap: wrap; gap: 1.25rem; color: var(--muted); }
+  .nav a { text-decoration: none; }
+  h1, h2, h3 { margin-top: 0; letter-spacing: -.035em; }
+  h1 { margin: 0; font-size: clamp(3.15rem, 7vw, 5.75rem); line-height: .98; }
+  .hero { padding: 5rem 0 1rem; text-align: center; }
+  .hero-intro { max-width: 48rem; margin: 0 auto; }
+  .hero-intro > p { max-width: 42rem; margin: 1.25rem auto 0; color: var(--soft); font-size: clamp(1.05rem, 2vw, 1.3rem); }
+  .scoreboard { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; max-width: 48rem; margin: 2.8rem auto 0; padding: 2rem 2.25rem; border: 1px solid var(--rule); border-radius: 18px; background: var(--surface); }
+  .side { display: grid; justify-items: center; }
+  .side .model { color: var(--soft); font-size: .95rem; font-weight: 750; }
+  .side strong { margin-top: .15rem; font-size: clamp(4.8rem, 10vw, 7.5rem); line-height: .95; letter-spacing: -.075em; font-variant-numeric: tabular-nums; }
+  .side small { color: var(--muted); font-size: .75rem; }
+  .versus { width: 5.5rem; color: var(--faint); font-size: .85rem; }
+  .score-note { margin: 1rem 0 0; color: var(--muted); font-size: .82rem; }
+  .score-note strong { color: var(--soft); }
+  .meta { display: grid; grid-template-columns: repeat(3, 1fr); max-width: 48rem; margin: 1.6rem auto 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .meta span { padding: .8rem .6rem; color: var(--muted); font-size: .8rem; }
+  .meta span + span { border-left: 1px solid var(--rule); }
+  .verdict-strip { display: grid; grid-template-columns: repeat(4, 1fr); margin: 3rem 0 0; text-align: left; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .verdict-strip div { padding: 1rem 1.15rem; }
+  .verdict-strip div + div { border-left: 1px solid var(--rule); }
+  .verdict-strip span { display: block; color: var(--muted); font-size: .73rem; }
+  .verdict-strip strong { display: block; margin-top: .15rem; font-size: 1rem; }
+  .definition { padding: 4.5rem 0 0; text-align: left; }
+  .definition-top { max-width: 47rem; margin: auto; text-align: center; }
+  .definition h2, .section-head h2 { margin: 0; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; }
+  .definition-top p { margin: 1rem auto 0; color: var(--soft); }
+  .criteria { display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 2rem; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .criterion { padding: 1.15rem 1rem; }
+  .criterion + .criterion { border-left: 1px solid var(--rule); }
+  .criterion b { display: block; margin-bottom: .3rem; font-size: .86rem; }
+  .criterion span { color: var(--muted); font-size: .76rem; line-height: 1.4; }
+  main { padding-bottom: 5rem; }
+  section { margin-top: 5.5rem; scroll-margin-top: 1rem; }
+  .section-head { max-width: 48rem; margin: 0 auto 2rem; text-align: center; }
+  .section-head p { max-width: 36rem; margin: .75rem auto 0; color: var(--muted); font-size: .9rem; }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .compare-card { padding: 1.75rem 2rem; }
+  .compare-card + .compare-card { border-left: 1px solid var(--rule); }
+  .compare-card h3 { margin-bottom: .8rem; font-size: 1.35rem; }
+  .compare-card ul { margin: 0; padding-left: 1.1rem; }
+  .compare-card li { margin-bottom: .42rem; color: var(--soft); font-size: .9rem; }
+  .plain-answer { max-width: 48rem; margin: 1.6rem auto 0; color: var(--soft); text-align: center; font-size: 1rem; }
+  .plain-answer strong { color: var(--ink); }
+  .judge-board { margin-top: 2.25rem; border-top: 1px solid var(--rule); }
+  .judge-legend, .judge-row { display: grid; grid-template-columns: minmax(10rem, 1.2fr) 8rem 7rem minmax(14rem, 1.6fr); align-items: center; gap: 1rem; }
+  .judge-legend { padding: .7rem 1rem; color: var(--muted); font-size: .72rem; }
+  .judge-row { min-height: 4rem; padding: .7rem 1rem; border-top: 1px solid var(--rule); }
+  .judge-row:last-child { border-bottom: 1px solid var(--rule); }
+  .task-name b { display: block; font-size: .9rem; }
+  .task-name span, .why { color: var(--muted); font-size: .77rem; }
+  .votes { display: flex; gap: .35rem; }
+  .vote { display: grid; width: 1.7rem; height: 1.7rem; place-items: center; border: 1px solid var(--faint); border-radius: 50%; color: var(--soft); font: 700 .63rem var(--mono); }
+  .vote.o { background: var(--ink); border-color: var(--ink); color: var(--page); }
+  .row-result { font-size: .84rem; font-weight: 750; white-space: nowrap; }
+  .dashboard { display: grid; grid-template-columns: 1.15fr 1fr .9fr; gap: 1rem; }
+  .panel, .bug { padding: 1.3rem; border: 1px solid var(--rule); border-radius: 12px; background: var(--surface); }
+  .panel h3 { margin: 0 0 1rem; font-size: 1rem; letter-spacing: -.015em; }
+  .speed-row + .speed-row { margin-top: 1.2rem; }
+  .speed-head { display: flex; justify-content: space-between; gap: .8rem; margin-bottom: .45rem; font-size: .76rem; }
+  .speed-head span { color: var(--muted); }
+  .barline { display: grid; grid-template-columns: 3rem 1fr 3.3rem; gap: .5rem; align-items: center; margin-top: .35rem; color: var(--muted); font-size: .7rem; }
+  .track { height: .5rem; overflow: hidden; background: #22262d; border-radius: 99px; }
+  .fill { height: 100%; background: var(--faint); border-radius: inherit; }
+  .fill.opus { background: var(--ink); }
+  .barline strong { color: var(--soft); text-align: right; }
+  .pairs { display: grid; gap: .8rem; }
+  .pair-head { display: flex; justify-content: space-between; color: var(--muted); font-size: .68rem; }
+  .pair-bars { display: grid; gap: .28rem; }
+  .pair-bar { display: grid; grid-template-columns: 3rem 1fr 3.4rem; gap: .45rem; align-items: center; color: var(--muted); font-size: .68rem; }
+  .pair-bar i { display: block; height: .45rem; background: var(--faint); border-radius: 99px; }
+  .pair-bar.opus i { background: var(--ink); }
+  .pair-bar strong { color: var(--soft); text-align: right; }
+  .fix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; }
+  .fix { padding: .85rem; background: var(--surface-2); border-radius: 8px; }
+  .fix b { display: block; font-size: 1.75rem; line-height: 1; }
+  .fix span { color: var(--muted); font-size: .72rem; }
+  .dots { display: flex; gap: .28rem; margin-top: .65rem; }
+  .dot { width: .5rem; height: .5rem; border-radius: 50%; border: 1px solid var(--faint); }
+  .dot.fixed { background: var(--ink); border-color: var(--ink); }
+  .panel-note { margin: .8rem 0 0; color: var(--muted); font-size: .73rem; }
+  .bugs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .bug .tag { color: var(--muted); font: 700 .68rem var(--mono); }
+  .bug h3 { margin: .5rem 0; font-size: 1rem; }
+  .bug p { margin: 0; color: var(--soft); font-size: .82rem; }
+  .task-list { max-width: 52rem; margin: auto; border-top: 1px solid var(--rule); }
+  .task-key { max-width: 52rem; margin: -1rem auto 1rem; color: var(--muted); text-align: center; font-size: .72rem; }
+  details { border-bottom: 1px solid var(--rule); }
+  summary { cursor: pointer; list-style: none; padding: .9rem 2rem .9rem 0; position: relative; font-weight: 700; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; position: absolute; right: .2rem; color: var(--muted); font-family: var(--mono); }
+  details[open] summary::after { content: "−"; }
+  details p { max-width: 48rem; margin: 0 0 1rem; color: var(--soft); font-size: .86rem; }
+  .result { float: right; margin-right: 1.5rem; color: var(--muted); font-weight: 500; }
+  .task-list details[open] { margin-inline: -1rem; padding-inline: 1rem; background: var(--surface); }
+  .task-body { padding: .1rem 0 1.4rem; }
+  .task-brief { max-width: 50rem; margin-bottom: 1.15rem; color: var(--soft); font-size: .9rem; }
+  .task-brief b { color: var(--ink); }
+  .efforts { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+  .efforts.one .effort { grid-column: 1 / -1; }
+  .effort { padding: .9rem; border: 1px solid var(--rule); border-radius: 9px; background: var(--page); }
+  .effort h4, .model-read h4 { margin: 0 0 .6rem; font-size: .8rem; letter-spacing: -.01em; }
+  .metric-labels, .metric-line { display: grid; grid-template-columns: 1fr repeat(3, minmax(3.7rem, .65fr)); gap: .55rem; align-items: center; }
+  .metric-labels { padding-bottom: .35rem; color: var(--muted); font-size: .62rem; }
+  .metric-line { padding: .4rem 0; border-top: 1px solid var(--rule); color: var(--soft); font-size: .72rem; font-variant-numeric: tabular-nums; }
+  .metric-line b { color: var(--ink); font-size: .75rem; }
+  .model-analysis { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin-top: .7rem; }
+  .model-read { padding: 1rem; background: var(--surface-2); border-radius: 9px; }
+  .model-read p { margin: .45rem 0 0; color: var(--muted); font-size: .78rem; }
+  .model-read p b { color: var(--soft); }
+  .task-verdict { max-width: none; margin: .7rem 0 0; padding: .8rem 1rem; border: 1px solid var(--rule); border-radius: 9px; color: var(--soft); font-size: .8rem; }
+  .task-verdict b { color: var(--ink); }
+  .routing { display: grid; grid-template-columns: 12rem 1fr; gap: .45rem 1.4rem; max-width: 48rem; margin: auto; }
+  .routing dt { font-weight: 800; }
+  .routing dd { margin: 0 0 .68rem; color: var(--soft); }
+  .method { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .method .panel p, .method .panel li { color: var(--soft); font-size: .86rem; }
+  .method ul { margin: 0; padding-left: 1.1rem; }
+  .method li { margin-bottom: .38rem; }
+  footer { padding: 2rem 0 3rem; border-top: 1px solid var(--rule); color: var(--muted); text-align: center; font-size: .76rem; }
+  code { font-family: var(--mono); font-size: .84em; background: var(--surface-2); padding: .08em .28em; }
+  @media (max-width: 54rem) {
+    .shell { width: min(calc(100% - 2rem), 68rem); }
+    .criteria { grid-template-columns: repeat(2, 1fr); border-left: 1px solid var(--rule); }
+    .criterion { border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+    .criterion + .criterion { border-left: 0; }
+    .dashboard { grid-template-columns: 1fr; }
+    .judge-legend, .judge-row { grid-template-columns: 1fr 8rem 6.5rem; }
+    .judge-legend span:last-child, .judge-row .why { display: none; }
+  }
+  @media (max-width: 38rem) {
+    .nav-links { display: none; }
+    .hero { padding-top: 3.2rem; }
+    h1 { font-size: 3rem; }
+    .scoreboard { grid-template-columns: 1fr auto 1fr; padding: 1.4rem .75rem; border-radius: 12px; }
+    .side strong { font-size: 4.5rem; }
+    .versus { width: 2.7rem; }
+    .meta { grid-template-columns: 1fr; }
+    .meta span + span { border-left: 0; border-top: 1px solid var(--rule); }
+    .verdict-strip { grid-template-columns: 1fr 1fr; }
+    .verdict-strip div:nth-child(3) { border-left: 0; border-top: 1px solid var(--rule); }
+    .verdict-strip div:nth-child(4) { border-top: 1px solid var(--rule); }
+    .criteria, .compare, .bugs, .method { grid-template-columns: 1fr; }
+    .criterion + .criterion, .compare-card + .compare-card { border-left: 0; border-top: 1px solid var(--rule); }
+    .judge-legend, .judge-row { grid-template-columns: 1fr 7.4rem; }
+    .judge-legend span:nth-child(3), .judge-row .row-result { display: none; }
+    .routing { grid-template-columns: 1fr; gap: .1rem; }
+    .routing dd { margin-bottom: .9rem; }
+    .result { float: none; margin-left: .4rem; }
+    .efforts, .model-analysis { grid-template-columns: 1fr; }
+    .metric-labels, .metric-line { grid-template-columns: 1fr repeat(3, minmax(3.4rem, .65fr)); gap: .35rem; }
+  }
+</style>
+</head>
+<body>
+<nav class="nav shell" aria-label="Report sections">
+  <span>Opus 5 vs Sol</span>
+  <span class="nav-links"><a href="#meaning">Criteria</a><a href="#judging">Judging</a><a href="#results">Results</a><a href="#tasks">Tasks</a><a href="#method">Method</a><a href="artifacts/README.md">Artifacts</a></span>
+</nav>
+
+<header class="hero shell" id="result">
+  <div class="hero-intro">
+    <h1>Opus 5 vs Sol</h1>
+    <p>I gave both models the same nine tasks, then had their work reviewed blind.</p>
+  </div>
+
+  <div class="scoreboard" aria-label="Blind result: Opus won five tasks and Sol won three">
+    <div class="side"><span class="model">Opus 5</span><strong>5</strong><small>task wins</small></div>
+    <div class="versus">versus</div>
+    <div class="side"><span class="model">Sol</span><strong>3</strong><small>task wins</small></div>
+  </div>
+  <p class="score-note"><strong>Both Sol-family judges returned this score independently.</strong> Opus-family judges scored it 7–1 and 8–0.</p>
+  <div class="meta"><span>9 tasks · 28 outputs</span><span>24 code submissions</span><span>32 blind judgments</span></div>
+
+  <div class="verdict-strip" aria-label="Summary of the main tradeoffs">
+    <div><span>Correctness</span><strong>Opus</strong></div>
+    <div><span>Edge-case coverage</span><strong>Opus</strong></div>
+    <div><span>Speed</span><strong>Sol · 11/14</strong></div>
+    <div><span>Less code</span><strong>Sol</strong></div>
+  </div>
+
+  <div class="definition" id="meaning">
+    <div class="definition-top">
+      <h2>What counted as a win?</h2>
+      <p>A blind judge compared both submissions against the full task—not just their self-written tests—and picked the stronger result. There was no weighted formula.</p>
+    </div>
+    <div class="criteria">
+      <div class="criterion"><b>Works correctly</b><span>Including failure paths.</span></div>
+      <div class="criterion"><b>Follows the contract</b><span>Exact API and behavior.</span></div>
+      <div class="criterion"><b>Handles edge cases</b><span>Concurrency, cancellation, bad input.</span></div>
+      <div class="criterion"><b>Proves the behavior</b><span>Useful adversarial tests.</span></div>
+      <div class="criterion"><b>Ships the whole task</b><span>Without needless machinery.</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+  <section id="judging">
+    <div class="section-head"><h2>Was Opus code actually better?</h2><p>Usually more complete and safer. Not always cleaner.</p></div>
+    <div class="compare">
+      <article class="compare-card"><h3>Opus was stronger at</h3><ul><li>Matching subtle parts of the spec</li><li>Handling failure paths and bad inputs</li><li>Writing adversarial, deterministic tests</li><li>Finding and grading defects</li></ul></article>
+      <article class="compare-card"><h3>Sol was stronger at</h3><ul><li>Finishing faster on 11 of 14 comparisons</li><li>Keeping implementations smaller</li><li>Avoiding unnecessary files and layers</li><li>Planning the cleaner migration sequence</li></ul></article>
+    </div>
+    <p class="plain-answer">Opus earned its wins when the extra work caught a real failure. Sol often had the cleaner core implementation, but its thinner tests missed more of the contract.</p>
+
+    <div class="judge-board" aria-label="Four blind votes for each task">
+      <div class="judge-legend"><span>Task</span><span>Four blind votes</span><span>Result</span><span>What separated them</span></div>
+      <div class="judge-row"><div class="task-name"><b>T1 · Worker pool</b><span>Go</span></div><div class="votes"><i class="vote s">S</i><i class="vote s">S</i><i class="vote s">S</i><i class="vote o">O</i></div><div class="row-result">Sol 3–1</div><div class="why">Both missed part of shutdown</div></div>
+      <div class="judge-row"><div class="task-name"><b>T2 · LRU cache</b><span>Go</span></div><div class="votes"><i class="vote o">O</i><i class="vote o">O</i><i class="vote o">O</i><i class="vote o">O</i></div><div class="row-result">Opus 4–0</div><div class="why">Cancellation and stronger tests</div></div>
+      <div class="judge-row"><div class="task-name"><b>T3 · Parser</b><span>Rust</span></div><div class="votes"><i class="vote o">O</i><i class="vote o">O</i><i class="vote o">O</i><i class="vote o">O</i></div><div class="row-result">Opus 4–0</div><div class="why">Diagnostics and test clarity</div></div>
+      <div class="judge-row"><div class="task-name"><b>T4 · Rate limiter</b><span>Rust</span></div><div class="votes"><i class="vote o">O</i><i class="vote o">O</i><i class="vote o">O</i><i class="vote o">O</i></div><div class="row-result">Opus 4–0</div><div class="why">Float math and fake time</div></div>
+      <div class="judge-row"><div class="task-name"><b>T5 · Retry library</b><span>TypeScript</span></div><div class="votes"><i class="vote s">S</i><i class="vote o">O</i><i class="vote o">O</i><i class="vote o">O</i></div><div class="row-result">Opus 3–1</div><div class="why">Error semantics and type proof</div></div>
+      <div class="judge-row"><div class="task-name"><b>T6 · Log pipeline</b><span>Node</span></div><div class="votes"><i class="vote o">O</i><i class="vote o">O</i><i class="vote o">O</i><i class="vote o">O</i></div><div class="row-result">Opus 4–0</div><div class="why">Input validation and backpressure</div></div>
+      <div class="judge-row"><div class="task-name"><b>T7 · State store</b><span>React</span></div><div class="votes"><i class="vote o">O</i><i class="vote o">O</i><i class="vote s">S</i><i class="vote o">O</i></div><div class="row-result">Opus 3–1</div><div class="why">Rollback and render safety</div></div>
+      <div class="judge-row"><div class="task-name"><b>T8 · Migration plan</b><span>Planning</span></div><div class="votes"><i class="vote s">S</i><i class="vote o">O</i><i class="vote s">S</i><i class="vote o">O</i></div><div class="row-result">Tie 2–2</div><div class="why">Hazard depth versus sequencing</div></div>
+    </div>
+  </section>
+
+  <section id="results">
+    <div class="section-head"><h2>The tradeoffs in numbers</h2><p>Wall time, output volume, and which bugs survived higher effort.</p></div>
+    <div class="dashboard">
+      <article class="panel">
+        <h3>Wall-clock time</h3>
+        <div class="speed-row"><div class="speed-head"><b>Medium · 9 tasks</b><span>Opus took 1.4× as long</span></div><div class="barline"><span>Sol</span><div class="track"><div class="fill" style="width:71%"></div></div><strong>51m</strong></div><div class="barline"><span>Opus</span><div class="track"><div class="fill opus" style="width:100%"></div></div><strong>72m</strong></div></div>
+        <div class="speed-row"><div class="speed-head"><b>High · 5 tasks</b><span>Opus took 2.7× as long</span></div><div class="barline"><span>Sol</span><div class="track"><div class="fill" style="width:37%"></div></div><strong>57m</strong></div><div class="barline"><span>Opus</span><div class="track"><div class="fill opus" style="width:100%"></div></div><strong>153m</strong></div></div>
+      </article>
+
+      <article class="panel">
+        <h3>Lines and tests</h3>
+        <div class="pairs">
+          <div><div class="pair-head"><b>Medium lines</b><span>Sol 3,277 · Opus 5,416</span></div><div class="pair-bars"><div class="pair-bar"><span>Sol</span><i style="width:61%"></i><strong>3,277</strong></div><div class="pair-bar opus"><span>Opus</span><i style="width:100%"></i><strong>5,416</strong></div></div></div>
+          <div><div class="pair-head"><b>Medium tests</b><span>Sol 53 · Opus 134</span></div><div class="pair-bars"><div class="pair-bar"><span>Sol</span><i style="width:40%"></i><strong>53</strong></div><div class="pair-bar opus"><span>Opus</span><i style="width:100%"></i><strong>134</strong></div></div></div>
+          <div><div class="pair-head"><b>High lines</b><span>Sol 2,879 · Opus 6,885</span></div><div class="pair-bars"><div class="pair-bar"><span>Sol</span><i style="width:42%"></i><strong>2,879</strong></div><div class="pair-bar opus"><span>Opus</span><i style="width:100%"></i><strong>6,885</strong></div></div></div>
+          <div><div class="pair-head"><b>High tests</b><span>Sol 40 · Opus 178</span></div><div class="pair-bars"><div class="pair-bar"><span>Sol</span><i style="width:22%"></i><strong>40</strong></div><div class="pair-bar opus"><span>Opus</span><i style="width:100%"></i><strong>178</strong></div></div></div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h3>What high effort fixed</h3>
+        <div class="fix-grid"><div class="fix"><b>2/2</b><span>implementation bugs fixed</span><div class="dots"><i class="dot fixed"></i><i class="dot fixed"></i></div></div><div class="fix"><b>0/5</b><span>design flaws fixed</span><div class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></div></div></div>
+        <p class="panel-note">Sol fixed float drift and invalid JSON handling. Retry, transaction, render-guard, shutdown, and deadline decisions persisted across both models.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="bugs">
+    <div class="section-head"><h2>Three examples</h2><p>Why a green suite did not settle the comparison.</p></div>
+    <div class="bugs">
+      <article class="bug"><span class="tag">T2 · Sol</span><h3>Test matched its implementation</h3><p>The cancellation handoff worked only for the exact error shape returned by its own fake loader. Opus handled a realistic loader error.</p></article>
+      <article class="bug"><span class="tag">T4 · Sol</span><h3>Injected time still used real time</h3><p>High effort fixed the refill math, but the fake clock still drove real-time polling. Opus could wake blocked tests through the clock itself.</p></article>
+      <article class="bug"><span class="tag">T7 · Sol</span><h3>A guard rejected a valid call</h3><p>After a render-phase error, the guard stayed active for a microtask and rejected the next legitimate update. High effort kept the behavior.</p></article>
+    </div>
+  </section>
+
+  <section id="tasks">
+    <div class="section-head"><h2>Task by task</h2><p>Open any task for its brief, run numbers, strengths, misses, and verdict.</p></div>
+    <p class="task-key">Time is wall clock. LOC includes implementation and test source. T8 and T9 count document lines.</p>
+    <div class="task-list">
+      <details>
+        <summary>T1 · Go worker pool <span class="result">Sol 3–1</span></summary>
+        <div class="task-body">
+          <p class="task-brief"><b>The task:</b> Build a bounded concurrent worker pool with cancellation, panic recovery, thread-safe stats, queue draining, and deadline-aware shutdown.</p>
+          <div class="efforts">
+            <div class="effort"><h4>Medium effort</h4><div class="metric-labels"><span>Model</span><span>Time</span><span>LOC</span><span>Tests</span></div><div class="metric-line"><b>Sol</b><span>3:44</span><span>482</span><span>8</span></div><div class="metric-line"><b>Opus</b><span>5:55</span><span>672</span><span>11</span></div></div>
+            <div class="effort"><h4>High effort</h4><div class="metric-labels"><span>Model</span><span>Time</span><span>LOC</span><span>Tests</span></div><div class="metric-line"><b>Sol</b><span>6:19</span><span>486</span><span>10</span></div><div class="metric-line"><b>Opus</b><span>15:41</span><span>988</span><span>18</span></div></div>
+          </div>
+          <div class="model-analysis"><div class="model-read"><h4>Opus 5</h4><p><b>Good:</b> Drained queued work and tested more lifecycle paths.</p><p><b>Missed:</b> After the deadline it cancelled a job, then waited forever if that job ignored cancellation. High effort kept the bug.</p></div><div class="model-read"><h4>Sol</h4><p><b>Good:</b> Smaller, faster, and returned promptly when shutdown expired.</p><p><b>Missed:</b> Queued jobs could still run after timeout; stats could double-count failed or panicked jobs.</p></div></div>
+          <p class="task-verdict"><b>Why Sol led:</b> Three judges treated Opus's possible shutdown hang as the worse failure. Neither implementation fully met the lifecycle contract.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>T2 · Go LRU + singleflight <span class="result">Opus 4–0</span></summary>
+        <div class="task-body">
+          <p class="task-brief"><b>The task:</b> Build a generic LRU cache with TTL, per-key singleflight loading, cancellation handoff, and a re-entrant eviction callback.</p>
+          <div class="efforts one"><div class="effort"><h4>Medium effort · no high rerun</h4><div class="metric-labels"><span>Model</span><span>Time</span><span>LOC</span><span>Tests</span></div><div class="metric-line"><b>Sol</b><span>4:28</span><span>494</span><span>6</span></div><div class="metric-line"><b>Opus</b><span>10:13</span><span>869</span><span>11</span></div></div></div>
+          <div class="model-analysis"><div class="model-read"><h4>Opus 5</h4><p><b>Good:</b> Correctly handed a cancelled load to a waiter even when the loader returned its own error type. Channel-based tests proved the waiter was parked.</p><p><b>Tradeoff:</b> Nearly twice the code and more than twice the time.</p></div><div class="model-read"><h4>Sol</h4><p><b>Good:</b> Compact implementation; the core LRU and TTL behavior worked.</p><p><b>Missed:</b> Handoff worked only when the loader returned <code>ctx.Err()</code> exactly. Its own fake did that, hiding the defect.</p></div></div>
+          <p class="task-verdict"><b>Why Opus swept:</b> Its implementation survived a realistic cancellation probe and its concurrency tests established their preconditions instead of relying on scheduler luck.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>T3 · Rust zero-copy parser <span class="result">Opus 4–0</span></summary>
+        <div class="task-body">
+          <p class="task-brief"><b>The task:</b> Parse a binary record stream without copying field bytes, never panic on malformed input, report useful byte offsets, and fuse after errors.</p>
+          <div class="efforts one"><div class="effort"><h4>Medium effort · no high rerun</h4><div class="metric-labels"><span>Model</span><span>Time</span><span>LOC</span><span>Tests</span></div><div class="metric-line"><b>Sol</b><span>4:21</span><span>501</span><span>11</span></div><div class="metric-line"><b>Opus</b><span>7:06</span><span>921</span><span>44</span></div></div></div>
+          <div class="model-analysis"><div class="model-read"><h4>Opus 5</h4><p><b>Good:</b> Useful truncation offsets and 26 clearly named adversarial cases. Zero-copy, safe, and fused correctly.</p><p><b>Tradeoff:</b> Much larger suite and implementation for a fairly small core.</p></div><div class="model-read"><h4>Sol</h4><p><b>Good:</b> Also zero-copy and panic-safe; cross-fuzzing found no core correctness failure.</p><p><b>Missed:</b> Most truncation errors pointed to end-of-input rather than the field that failed. Batched tests were harder to diagnose.</p></div></div>
+          <p class="task-verdict"><b>Why Opus swept:</b> The parsers were similarly correct. Opus won on diagnostic quality and clearer proof, not on basic parsing.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>T4 · Rust token bucket <span class="result">Opus 4–0</span></summary>
+        <div class="task-body">
+          <p class="task-brief"><b>The task:</b> Build a thread-safe token bucket with lazy refill, blocking acquisition, bounded unfairness, precise float math, and fully injectable time.</p>
+          <div class="efforts">
+            <div class="effort"><h4>Medium effort</h4><div class="metric-labels"><span>Model</span><span>Time</span><span>LOC</span><span>Tests</span></div><div class="metric-line"><b>Sol</b><span>5:38</span><span>366</span><span>6</span></div><div class="metric-line"><b>Opus</b><span>8:55</span><span>516</span><span>9</span></div></div>
+            <div class="effort"><h4>High effort</h4><div class="metric-labels"><span>Model</span><span>Time</span><span>LOC</span><span>Tests</span></div><div class="metric-line"><b>Sol</b><span>7:18</span><span>446</span><span>8</span></div><div class="metric-line"><b>Opus</b><span>44:44</span><span>1,162</span><span>29</span></div></div>
+          </div>
+          <div class="model-analysis"><div class="model-read"><h4>Opus 5</h4><p><b>Good:</b> Preserved fractional refill, used a manual-clock wake path, and tested fairness and conservation deeply.</p><p><b>Tradeoff:</b> High effort ballooned to 1,162 lines and 44 minutes.</p></div><div class="model-read"><h4>Sol</h4><p><b>Good:</b> High effort fixed the medium float-drift bug with an anchor-based refill.</p><p><b>Missed:</b> The injected clock still drove real-time polling. A frozen fake clock caused repeated wakeups, so tests were not truly deterministic.</p></div></div>
+          <p class="task-verdict"><b>Why Opus swept:</b> Sol repaired the arithmetic but not the timing design. Opus's extra machinery produced a real correctness and testability advantage here.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>T5 · TypeScript resilience library <span class="result">Opus 3–1</span></summary>
+        <div class="task-body">
+          <p class="task-brief"><b>The task:</b> Implement typed retries, deadlines, abortable attempts, jitter, a concurrency-safe circuit breaker, and compile-time event exhaustiveness.</p>
+          <div class="efforts">
+            <div class="effort"><h4>Medium effort</h4><div class="metric-labels"><span>Model</span><span>Time</span><span>LOC</span><span>Tests</span></div><div class="metric-line"><b>Sol</b><span>15:40</span><span>634</span><span>9</span></div><div class="metric-line"><b>Opus</b><span>12:43</span><span>1,002</span><span>19</span></div></div>
+            <div class="effort"><h4>High effort</h4><div class="metric-labels"><span>Model</span><span>Time</span><span>LOC</span><span>Tests</span></div><div class="metric-line"><b>Sol</b><span>6:21</span><span>873</span><span>10</span></div><div class="metric-line"><b>Opus</b><span>34:29</span><span>1,835</span><span>41</span></div></div>
+          </div>
+          <div class="model-analysis"><div class="model-read"><h4>Opus 5</h4><p><b>Good:</b> Kept public errors separate from internal control flow and shipped a negative TypeScript fixture that proved exhaustiveness actually fails.</p><p><b>Missed:</b> Rejected early when the next backoff would cross the deadline instead of waiting for expiry. High effort kept it.</p></div><div class="model-read"><h4>Sol</h4><p><b>Good:</b> Smaller and dramatically faster at high effort.</p><p><b>Missed:</b> Used public <code>DeadlineError</code> as a private signal, so a wrapped function throwing that error could stop retries and bypass <code>retryOn</code>.</p></div></div>
+          <p class="task-verdict"><b>Why Opus led:</b> Three judges considered Sol's error-channel collision more serious than Opus's slightly early deadline decision.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>T6 · Node log pipeline <span class="result">Opus 4–0</span></summary>
+        <div class="task-body">
+          <p class="task-brief"><b>The task:</b> Stream multi-gigabyte NDJSON in bounded memory while preserving order, redacting tokens, numbering requests, and rejecting malformed records safely.</p>
+          <div class="efforts">
+            <div class="effort"><h4>Medium effort</h4><div class="metric-labels"><span>Model</span><span>Time</span><span>LOC</span><span>Tests</span></div><div class="metric-line"><b>Sol</b><span>3:56</span><span>399</span><span>3</span></div><div class="metric-line"><b>Opus</b><span>5:40</span><span>432</span><span>7</span></div></div>
+            <div class="effort"><h4>High effort</h4><div class="metric-labels"><span>Model</span><span>Time</span><span>LOC</span><span>Tests</span></div><div class="metric-line"><b>Sol</b><span>25:26</span><span>587</span><span>2</span></div><div class="metric-line"><b>Opus</b><span>21:23</span><span>804</span><span>13</span></div></div>
+          </div>
+          <div class="model-analysis"><div class="model-read"><h4>Opus 5</h4><p><b>Good:</b> Proved backpressure directly and isolated memory measurement in a child process. Handled <code>null</code> and scalar JSON safely.</p><p><b>Missed:</b> High effort became over-strict and rejected a valid record missing an optional field.</p></div><div class="model-read"><h4>Sol</h4><p><b>Good:</b> High effort added the missing JSON-shape guard and fixed the crash.</p><p><b>Missed:</b> Medium crashed on valid JSON <code>null</code>. High took 6.5× longer than medium while shrinking from three tests to two.</p></div></div>
+          <p class="task-verdict"><b>Why Opus swept:</b> Better input handling and substantially stronger proof of backpressure. This was also one of the three comparisons where Opus finished faster.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>T7 · React undoable store <span class="result">Opus 3–1</span></summary>
+        <div class="task-body">
+          <p class="task-brief"><b>The task:</b> Build a headless external store with undo/redo, nested transactions, selective React hooks, and protection against mutation during render.</p>
+          <div class="efforts">
+            <div class="effort"><h4>Medium effort</h4><div class="metric-labels"><span>Model</span><span>Time</span><span>LOC</span><span>Tests</span></div><div class="metric-line"><b>Sol</b><span>6:07</span><span>401</span><span>10</span></div><div class="metric-line"><b>Opus</b><span>14:31</span><span>1,004</span><span>33</span></div></div>
+            <div class="effort"><h4>High effort</h4><div class="metric-labels"><span>Model</span><span>Time</span><span>LOC</span><span>Tests</span></div><div class="metric-line"><b>Sol</b><span>11:06</span><span>487</span><span>10</span></div><div class="metric-line"><b>Opus</b><span>37:09</span><span>2,096</span><span>77</span></div></div>
+          </div>
+          <div class="model-analysis"><div class="model-read"><h4>Opus 5</h4><p><b>Good:</b> Safer transaction rollback, React 19-aware render detection, fail-open behavior, and far deeper hook/history tests.</p><p><b>Missed:</b> High effort reached 2,096 lines and 77 tests, then omitted the required summary—the only Opus deliverable miss.</p></div><div class="model-read"><h4>Sol</h4><p><b>Good:</b> Far smaller implementation with the cleaner core API.</p><p><b>Missed:</b> A render error poisoned the next valid update until a microtask ran. Throwing transactions could commit partial mutations. Both persisted at high.</p></div></div>
+          <p class="task-verdict"><b>Why Opus led:</b> Three judges valued the safer semantics. One Sol judge reasonably preferred Sol because Opus overbuilt the task and dropped a required file.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>T8 · Migration plan <span class="result">2–2 tie</span></summary>
+        <div class="task-body">
+          <p class="task-brief"><b>The task:</b> Plan a reversible, bug-compatible migration of a legacy Electron uploader to TypeScript and async/await—without a big-bang rewrite.</p>
+          <div class="efforts one"><div class="effort"><h4>Planning output · medium effort only</h4><div class="metric-labels"><span>Model</span><span>Time</span><span>Lines</span><span>Tests</span></div><div class="metric-line"><b>Sol</b><span>4:23</span><span>197</span><span>—</span></div><div class="metric-line"><b>Opus</b><span>3:56</span><span>297</span><span>—</span></div></div></div>
+          <div class="model-analysis"><div class="model-read"><h4>Opus 5</h4><p><b>Good:</b> Found deeper legacy hazards: double callbacks, synchronous callback reordering, UTF-8 corruption, and class-conversion traps.</p><p><b>Missed:</b> Changed a test-reset helper before the compatibility freeze, contradicting bug-for-bug migration.</p></div><div class="model-read"><h4>Sol</h4><p><b>Good:</b> Better sequence: characterization tests, seams, dormant candidate, cohorts, then removal—with abort points throughout.</p><p><b>Missed:</b> Its typed-core step was too large to bank much value if the migration stopped midway.</p></div></div>
+          <p class="task-verdict"><b>Why it tied:</b> Both Sol judges preferred Sol's restraint and sequencing; both Opus judges preferred Opus's deeper archaeology.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>T9 · Seeded defect review <span class="result">Fable: Opus slight</span></summary>
+        <div class="task-body">
+          <p class="task-brief"><b>The task:</b> Review Go and TypeScript session/budget code for real correctness, concurrency, resource, and data-integrity defects. False positives counted against the result.</p>
+          <div class="efforts one"><div class="effort"><h4>Review output · medium effort only</h4><div class="metric-labels"><span>Model</span><span>Time</span><span>Lines</span><span>Tests</span></div><div class="metric-line"><b>Sol</b><span>2:44</span><span>159</span><span>—</span></div><div class="metric-line"><b>Opus</b><span>3:15</span><span>273</span><span>—</span></div></div></div>
+          <div class="model-analysis"><div class="model-read"><h4>Opus 5</h4><p><b>Good:</b> Found essentially all 17 seeded defects, called 7 blockers against the key's 6, and found 3 additional real bugs.</p><p><b>Tradeoff:</b> Longer review and one more blocker than the answer key.</p></div><div class="model-read"><h4>Sol</h4><p><b>Good:</b> Also found essentially all seeded defects, found 2 additional real bugs, and was faster and terser.</p><p><b>Missed:</b> Marked only 2 issues as blockers, substantially understating production severity.</p></div></div>
+          <p class="task-verdict"><b>Why Fable leaned Opus:</b> Similar defect recall, but better severity calibration and one more defensible bonus finding. T9 is separate from the 32 blind votes.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="use">
+    <div class="section-head"><h2>How I would use them</h2><p>What this small sample changed for me.</p></div>
+    <dl class="routing"><dt>Fast bounded work</dt><dd>Sol at medium effort.</dd><dt>Subtle correctness</dt><dd>Opus, especially for concurrency, lifecycle, and input validation.</dd><dt>Missed edge case</dt><dd>Raise effort. Sol fixed both tracked implementation bugs.</dd><dt>Design disagreement</dt><dd>Use another model to review it. None of the five design flaws moved.</dd><dt>Controlling Opus</dt><dd>Set a file or line budget. “Keep it simple” was not enough.</dd></dl>
+  </section>
+
+  <section id="method">
+    <div class="section-head"><h2>Method and limits</h2><p>What I ran and what it cannot prove.</p></div>
+    <div class="method"><article class="panel"><h3>Setup</h3><p>Nine tasks received one medium-effort output from each model. Five coding tasks were rerun at high effort. Fable orchestrated and adjudicated; Opus- and Sol-family judges reviewed anonymous A/B trees.</p><p><a href="artifacts/README.md">Public artifacts</a> include prompts, outputs, timings, mappings, and judge reports.</p></article><article class="panel"><h3>Limits</h3><ul><li>One run per model, task, and effort.</li><li>Systems-heavy tasks; little UI or product work.</li><li>Two judge families, not four independent ones.</li><li>T2, T3, and T8 were re-judged without a high-effort rerun.</li><li>T9 used an answer key and sits outside the blind tally.</li></ul></article></div>
+  </section>
+</main>
+
+<footer><div class="shell">Run on 28 July 2026. Small firsthand eval, not a universal leaderboard.</div></footer>
+</body>
+</html>

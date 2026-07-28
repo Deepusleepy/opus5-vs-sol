@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Opus 5 versus Sol results</title>
+  <desc id="desc">Opus scored five to Sol's three. Opus took 1.4 times longer at medium effort and 2.7 times longer at high effort. The card also compares lines, tests, and high-effort fixes.</desc>
+  <rect width="1600" height="900" fill="#f7f7f5"/>
+
+  <!-- Score -->
+  <text x="560" y="80" text-anchor="middle" fill="#171716" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="34" font-weight="750">OPUS 5</text>
+  <text x="1040" y="80" text-anchor="middle" fill="#666663" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="34" font-weight="750">SOL</text>
+  <text x="560" y="245" text-anchor="middle" fill="#171716" font-family="Iowan Old Style, Palatino, Georgia, serif" font-size="178" font-weight="600">5</text>
+  <text x="800" y="205" text-anchor="middle" fill="#9a9a96" font-family="Iowan Old Style, Palatino, Georgia, serif" font-size="52">to</text>
+  <text x="1040" y="245" text-anchor="middle" fill="#666663" font-family="Iowan Old Style, Palatino, Georgia, serif" font-size="178" font-weight="600">3</text>
+
+  <rect x="200" y="270" width="1200" height="72" rx="5" fill="#eeeeeb"/>
+  <text x="800" y="301" text-anchor="middle" fill="#171716" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="21">Sol judges: 5–3 and 5–3 · Opus judges: 7–1 and 8–0</text>
+  <text x="800" y="329" text-anchor="middle" fill="#777773" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18">Fable on T1–T8: Opus 6 · Sol 1 · one tie. T9 was reviewed separately.</text>
+
+  <!-- Speed -->
+  <rect x="80" y="385" width="700" height="205" rx="6" fill="#eeeeeb"/>
+  <text x="430" y="430" text-anchor="middle" fill="#666663" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="22" font-weight="750">MEDIUM EFFORT · 9 TASKS</text>
+  <text x="430" y="515" text-anchor="middle" fill="#171716" font-family="Iowan Old Style, Palatino, Georgia, serif" font-size="50" font-weight="600">Opus took 1.4× longer</text>
+  <text x="430" y="557" text-anchor="middle" fill="#666663" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="22">Sol 51m 01s · Opus 72m 14s · Sol faster on 7/9</text>
+
+  <rect x="820" y="385" width="700" height="205" rx="6" fill="#eeeeeb"/>
+  <text x="1170" y="430" text-anchor="middle" fill="#666663" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="22" font-weight="750">HIGH EFFORT · 5 TASKS</text>
+  <text x="1170" y="515" text-anchor="middle" fill="#171716" font-family="Iowan Old Style, Palatino, Georgia, serif" font-size="50" font-weight="600">Opus took 2.7× longer</text>
+  <text x="1170" y="557" text-anchor="middle" fill="#666663" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="22">Sol 56m 30s · Opus 153m 26s · Sol faster on 4/5</text>
+
+  <!-- Code and tests -->
+  <line x1="80" y1="635" x2="1520" y2="635" stroke="#d3d3cf" stroke-width="2"/>
+  <text x="800" y="680" text-anchor="middle" fill="#666663" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="21" font-weight="750">LINES OF CODE · TESTS</text>
+
+  <text x="410" y="730" text-anchor="middle" fill="#171716" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="25" font-weight="700">MEDIUM</text>
+  <text x="410" y="772" text-anchor="middle" fill="#171716" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="24">Sol 3,277 · 53</text>
+  <text x="410" y="810" text-anchor="middle" fill="#666663" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="24">Opus 5,416 · 134</text>
+
+  <line x1="800" y1="700" x2="800" y2="820" stroke="#d3d3cf" stroke-width="2"/>
+
+  <text x="1190" y="730" text-anchor="middle" fill="#171716" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="25" font-weight="700">HIGH</text>
+  <text x="1190" y="772" text-anchor="middle" fill="#171716" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="24">Sol 2,879 · 40</text>
+  <text x="1190" y="810" text-anchor="middle" fill="#666663" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="24">Opus 6,885 · 178</text>
+
+  <!-- Fixes -->
+  <text x="800" y="866" text-anchor="middle" fill="#171716" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="21">High effort: Sol fixed both implementation bugs. Design flaws fixed: Sol 0/3 · Opus 0/2.</text>
+</svg>
